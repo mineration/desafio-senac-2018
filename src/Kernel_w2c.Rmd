@@ -1,0 +1,149 @@
+---
+title: "Análise de Sentimentos"
+author: "Rogerio Lopes"
+date: "08/11/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r }
+library("readr")
+library("tm")
+library("stringr")
+#library("RWeka")
+library("caret")
+library("h2o")
+```
+
+```{r}
+removeNumPunct <- function(x) gsub("[^[:alpha:][:space:]]*", "", x)
+
+rm_accent <- function(str,pattern="all") {
+  if(!is.character(str))
+    str <- as.character(str)
+  
+  pattern <- unique(pattern)
+  
+  if(any(pattern=="Ç"))
+    pattern[pattern=="Ç"] <- "ç"
+  
+  symbols <- c(
+    acute = "áéíóúÁÉÍÓÚýÝ",
+    grave = "àèìòùÀÈÌÒÙ",
+    circunflex = "âêîôûÂÊÎÔÛ",
+    tilde = "ãõÃÕñÑ",
+    umlaut = "äëïöüÄËÏÖÜÿ",
+    cedil = "çÇ"
+  )
+  
+  nudeSymbols <- c(
+    acute = "aeiouAEIOUyY",
+    grave = "aeiouAEIOU",
+    circunflex = "aeiouAEIOU",
+    tilde = "aoAOnN",
+    umlaut = "aeiouAEIOUy",
+    cedil = "cC"
+  )
+  
+  accentTypes <- c("´","`","^","~","¨","ç")
+  
+  if(any(c("all","al","a","todos","t","to","tod","todo")%in%pattern)) # opcao retirar todos
+    return(chartr(paste(symbols, collapse=""), paste(nudeSymbols, collapse=""), str))
+  
+  for(i in which(accentTypes%in%pattern))
+    str <- chartr(symbols[i],nudeSymbols[i], str)
+  
+  return(str)
+}
+
+
+```
+
+
+
+```{r}
+diretorio.padrao <- "/home/rglopes/Documentos/LDS/TripAdvisor_Scrape/model/"
+
+sArqAvaliacoesTrain <- paste0(diretorio.padrao,"avaliacoes_train.csv")
+df.AvaliacoesTrain <- as.data.frame(read.csv(header = TRUE, sArqAvaliacoesTrain, stringsAsFactors = FALSE))
+
+sArqAvaliacoesTest <- paste0(diretorio.padrao,"avaliacoes_test_1.csv")
+df.AvaliacoesTest <- as.data.frame(read.csv(header = TRUE, sArqAvaliacoesTest, stringsAsFactors = FALSE))
+
+
+```
+
+```{r}
+df.AvaliacoesTrain$Texto <- tolower(df.AvaliacoesTrain$Texto)
+df.AvaliacoesTrain$Texto <- rm_accent(df.AvaliacoesTrain$Texto)
+df.AvaliacoesTrain$Texto <- removeNumPunct(df.AvaliacoesTrain$Texto)
+
+df.AvaliacoesTest$Texto <- tolower(df.AvaliacoesTest$Texto)
+df.AvaliacoesTest$Texto <- rm_accent(df.AvaliacoesTest$Texto)
+df.AvaliacoesTest$Texto <- removeNumPunct(df.AvaliacoesTest$Texto)
+
+```
+```{r}
+h2o.init()
+treinamento.h <- as.h2o(df.AvaliacoesTrain, destination_frame = "avaliacoes_train")
+teste.h <- as.h2o(df.AvaliacoesTest, destination_frame = "avaliacoes_test")
+
+summary(treinamento.h)
+treinamento.h[1,"Texto"]
+words.train <- h2o.tokenize(treinamento.h$Texto, split = " ")
+words.test <- h2o.tokenize(teste.h$Texto, split = " ")
+
+words.full <- h2o.rbind(words.train, words.test)
+
+
+w2v.model <- h2o.word2vec(training_frame = words.full , model_id = "word2vec_trpadvisor",
+                           sent_sample_rate = 0, epochs = 4, vec_size = 100, window_size = 5)
+
+```
+```{r}
+
+classe.vecs <- h2o.transform(w2v.model, words.train, aggregate_method = "AVERAGE")
+valid.classes <- ! is.na(classe.vecs$C1)
+data.train <- h2o.cbind(treinamento.h[valid.classes,c("Avaliacao")], classe.vecs[valid.classes,])
+data.train$Avaliacao <- as.factor(data.train$Avaliacao)
+
+classe.vecs.test <- h2o.transform(w2v.model, words.test, aggregate_method = "AVERAGE")
+valid.classes.test <- ! is.na(classe.vecs.test$C1)
+data.test <- h2o.cbind(teste.h[valid.classes.test,c("Avaliacao")], classe.vecs.test[valid.classes.test,])
+
+```
+```{r}
+myX <- names(classe.vecs)
+myY <- "Avaliacao"
+
+mdlSentimento.gbm <- h2o.gbm(myX ,myY,  
+                         training_frame = data.train, 
+                         nfolds = 5)
+
+
+```
+```{r}
+mdlSentimento.gbm@model$cross_validation_metrics@metrics$logloss
+```
+
+```{r}
+predict.test <- h2o.predict(mdlSentimento.gbm, data.test)
+```
+```{r}
+df.submissao.h <- h2o.cbind(teste.h$ID, predict.test$predict)
+names(df.submissao.h) <- c("ID", "Avaliacao")
+df.submissao.h$Avaliacao <- as.factor(df.submissao.h$Avaliacao)
+summary(df.submissao.h)
+```
+
+```{r}
+
+df.submissao <- as.data.frame(df.submissao.h)
+arquivo_submissao <- paste0(diretorio.padrao,"submissao_00.csv")
+write.csv(x = df.submissao, file = arquivo_submissao, row.names = FALSE)
+```
+
