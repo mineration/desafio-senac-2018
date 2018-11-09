@@ -32,6 +32,8 @@ Nesta competição, as respostas serão avaliadas utilizando a função [Log Los
 
 Sendo que para _Log Loss_, quanto menor o valor obtido, melhor. Em caso de empate, prevalecerá o envio mais antigo.
 
+Durante o período da competição, será disponibilizado somente o _Log Loss_ de uma amostra da base de teste, em caráter de prévia. A pontuação definitiva será disponibilizada somente após o encerramento da competição.
+
 ## Premiação
 
 Bolsa parcial de estudos para cursar a Pós-graduação em Big Data Analytics na Faculdade Senac, válida para matrícula realizada em até 30 dias após o resultado da competição:
