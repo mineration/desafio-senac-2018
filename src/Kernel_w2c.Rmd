@@ -133,7 +133,7 @@ mdlSentimento.gbm@model$cross_validation_metrics@metrics$logloss
 predict.test <- h2o.predict(mdlSentimento.gbm, data.test)
 ```
 ```{r}
-df.submissao.h <- h2o.cbind(teste.h$ID, predict.test$predict)
+df.submissao.h <- h2o.cbind(teste.h$ID, predict.test$p1)
 names(df.submissao.h) <- c("ID", "Avaliacao")
 df.submissao.h$Avaliacao <- as.factor(df.submissao.h$Avaliacao)
 summary(df.submissao.h)
