@@ -54,7 +54,7 @@ Qualquer pessoa acima de 18 anos, observando que para usufruir do prêmio é pre
 
 ### Disponibilização do modelo
 
-Para recebimento da premiação, o competidor deverá disponibilizar o código-fonte do modelo utilizado para a criação da resposta. 
+Para recebimento da premiação, os vencedores deverão disponibilizar o código-fonte do modelo utilizado para a criação da resposta. Os scripts dos vencedores serão tornados públicos neste repositório.
 
 Os modelos podem ser criados nas linguagens **R** ou **Python**, podendo fazer uso de quaisquer bibliotecas, desde que gratuitas.
 
@@ -64,7 +64,7 @@ Cada premiação será dada a somente uma pessoa, mesmo que o trabalho tenha sid
 
 ### Limites de Envios de Respostas
 
-Só poderá ser realizado um envio de resposta por dia.
+Só poderá ser realizado um envio de resposta por hora.
 
 ## Código de Conduta
 
@@ -85,7 +85,7 @@ A Competição acontecerá a partir da data de início até a data final, confor
 
 - Início: **10/11/2018 às 12:00**.
 - Encerramento: **24/11/2018 às 12:00**.
-- Divulgação dos Vencedores: **25/11/2018 a partir das 12:00**.
+- Divulgação dos Vencedores: **26/11/2018 a partir das 12:00**.
 
 Note que os prazos da Competição estão sujeitos a alterações e prazos adicionais para os obstáculos podem ser introduzidos durante a Competição. Quaisquer prazos adicionais ou alterados, ainda não descritos nestas Regras da Competição, serão divulgados aos Participantes nessa mesma página. 
 
@@ -101,6 +101,11 @@ Para cada amostra no arquivo de teste, você deve prever a probabilidade do come
     4,0.0
     ...
 
-onde o primeiro campo é o "Id" da amostra e o segundo é a probabilidade.
+onde o primeiro campo é o "ID" da amostra e o segundo é a probabilidade.
 
 **Atenção!** Não deve ser enviado para o site www.mineration.com o arquivo de script que gerou as respostas, somente o CSV.
+
+
+## Suporte
+
+Eventuais problemas devem ser cadastrados no Github, aba [Issues](https://github.com/mineration/desafio-senac-2018/issues).
