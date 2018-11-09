@@ -14,7 +14,6 @@ knitr::opts_chunk$set(echo = TRUE)
 library("readr")
 library("tm")
 library("stringr")
-#library("RWeka")
 library("caret")
 library("h2o")
 ```
@@ -66,12 +65,12 @@ rm_accent <- function(str,pattern="all") {
 
 
 ```{r}
-diretorio.padrao <- "/home/rglopes/Documentos/LDS/TripAdvisor_Scrape/model/"
+diretorio.padrao <- "../data/"
 
 sArqAvaliacoesTrain <- paste0(diretorio.padrao,"avaliacoes_train.csv")
 df.AvaliacoesTrain <- as.data.frame(read.csv(header = TRUE, sArqAvaliacoesTrain, stringsAsFactors = FALSE))
 
-sArqAvaliacoesTest <- paste0(diretorio.padrao,"avaliacoes_test_1.csv")
+sArqAvaliacoesTest <- paste0(diretorio.padrao,"avaliacoes_test.csv")
 df.AvaliacoesTest <- as.data.frame(read.csv(header = TRUE, sArqAvaliacoesTest, stringsAsFactors = FALSE))
 
 

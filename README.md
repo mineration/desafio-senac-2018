@@ -11,7 +11,7 @@ Esta competição tem como objetivo criar um modelo preditivo que seja capaz de 
 Os arquivos são os seguintes:
 
 - [avaliacoes_train.csv](data/avaliacoes_train.csv): dados para treinamento;
-- [avaliacoes_test_1_SEM_rotulo.csv](data/avaliacoes_test_1_SEM_rotulo.csv): dados para envio da resposta.
+- [avaliacoes_test.csv](data/avaliacoes_test.csv): dados para envio da resposta.
 
 Os campos são os seguintes:
 
