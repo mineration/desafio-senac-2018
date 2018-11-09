@@ -37,7 +37,9 @@ Sendo que para _Log Loss_, quanto menor o valor obtido, melhor. Em caso de empat
 Bolsa parcial de estudos para cursar a Pós-graduação em Big Data Analytics na Faculdade Senac, válida para matrícula realizada em até 30 dias após o resultado da competição:
 
 **1º lugar**: 40% de desconto
+
 **2º lugar**: 30% de desconto
+
 **3º lugar**: 20% de desconto
 
 O prêmio é pessoal e intransferível.
