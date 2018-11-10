@@ -44,7 +44,7 @@ Bolsa parcial de estudos para cursar a Pós-graduação em Big Data Analytics na
 
 **3º lugar**: 20% de desconto
 
-O prêmio é pessoal e intransferível.
+O prêmio é pessoal e intransferível. Caso um mesmo competidor obtenha mais de uma colocação vencedora, ele receberá somente a maior premiação. A premiação subsequente será disponibilizada para o próximo melhor competidor e assim por diante.
 
 ## Regras
 
@@ -56,7 +56,7 @@ Qualquer pessoa acima de 18 anos, observando que para usufruir do prêmio é pre
 
 ### Disponibilização do modelo
 
-Para recebimento da premiação, os vencedores deverão disponibilizar o código-fonte do modelo utilizado para a criação da resposta. Os scripts dos vencedores serão tornados públicos neste repositório.
+Para recebimento da premiação, os competidores  deverão disponibilizar o código-fonte do modelo utilizado para a criação da resposta, enviando-o a um e-mail a ser disponibilizado posteriormente nesse regulamento. Os scripts dos vencedores serão tornados públicos neste repositório.
 
 Os modelos podem ser criados nas linguagens **R** ou **Python**, podendo fazer uso de quaisquer bibliotecas, desde que gratuitas.
 
