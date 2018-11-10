@@ -112,7 +112,7 @@ data.train$Avaliacao <- as.factor(data.train$Avaliacao)
 
 classe.vecs.test <- h2o.transform(w2v.model, words.test, aggregate_method = "AVERAGE")
 valid.classes.test <- ! is.na(classe.vecs.test$C1)
-data.test <- h2o.cbind(teste.h[valid.classes.test,c("Avaliacao")], classe.vecs.test[valid.classes.test,])
+data.test <- classe.vecs.test[valid.classes.test,]
 
 ```
 ```{r}
