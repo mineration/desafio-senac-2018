@@ -1,3 +1,5 @@
+## <b style="color: red;">ATENÇÃO:</b> [Grupo do Telegram](https://t.me/mineration) criado para interação entre competidores e organização do desafio!
+
 # Desafio Senac 2018
 
 ![restaurante](img/restaurante.jpeg)
