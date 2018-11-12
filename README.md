@@ -1,4 +1,4 @@
-## **ATENÇÃO**: [Grupo do Telegram](https://t.me/mineration) criado para interação entre competidores e organização do desafio!
+## ATENÇÃO: [Grupo do Telegram](https://t.me/mineration) criado para interação entre competidores e organização do desafio!
 
 # Desafio Senac 2018
 
