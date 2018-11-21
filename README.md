@@ -1,4 +1,8 @@
-## ATENÇÃO: [Grupo do Telegram](https://t.me/mineration) criado para interação entre competidores e organização do desafio!
+# Últimas notícias:
+
+- ## Competidores devem enviar seus códigos-fonte para o e-mail contato@mineration.com para validação das respostas. Detalhes no item [Regras](#regras) deste regulamento.
+
+- ## [Grupo do Telegram](https://t.me/mineration) criado para interação entre competidores e organização do desafio.
 
 # Desafio Senac 2018
 
@@ -58,7 +62,15 @@ Qualquer pessoa acima de 18 anos, observando que para usufruir do prêmio é pre
 
 ### Disponibilização do modelo
 
-Para recebimento da premiação, os competidores  deverão disponibilizar o código-fonte do modelo utilizado para a criação da resposta, enviando-o a um e-mail a ser disponibilizado posteriormente nesse regulamento. Os scripts dos vencedores serão tornados públicos neste repositório.
+Para recebimento da premiação, os competidores  deverão disponibilizar o código-fonte do modelo utilizado para a criação da resposta, enviando-o para o email contato@mineration.com. 
+
+O código-fonte deve ser enviado dentro do prazo da competição, informado no item [Prazos](#prazos) desse regulamento. 
+
+Será desclassificado o competidor que não enviar o modelo dentro do prazo.
+
+No caso de mais de um envio de modelo pelo mesmo competidor, será considerado o último modelo enviado dentro do prazo.
+
+Os scripts dos vencedores tornar-se-ão públicos, sendo disponibilizados neste repositório.
 
 Os modelos podem ser criados nas linguagens **R** ou **Python**, podendo fazer uso de quaisquer bibliotecas, desde que gratuitas.
 
