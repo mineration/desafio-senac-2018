@@ -1,8 +1,9 @@
 # Últimas notícias:
 
-- ## Competidores devem enviar seus códigos-fonte para o e-mail contato@mineration.com para validação das respostas. Detalhes no item [Regras](#regras) deste regulamento.
-
-- ## [Grupo do Telegram](https://t.me/mineration) criado para interação entre competidores e organização do desafio.
+- ## Resultado da Competição:
+    - 1º Lugar: Lucas Cusinato 
+    - 2º Lugar: Jorge Augusto Dias Samsonescu
+    - 3º Lugar: Ellaynne Christine Ribeiro de Moraes Sousa 
 
 # Desafio Senac 2018
 
