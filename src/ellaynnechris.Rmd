@@ -1,5 +1,5 @@
 ---
-title: "An·lise de Sentimentos"
+title: "An√°lise de Sentimentos"
 author: "Rogerio Lopes"
 date: "08/11/2018"
 output: html_document
@@ -33,7 +33,7 @@ library("stringi")
 ```
 
 ```{r}
-##IMPORTA«√O DOS DADOS
+##IMPORTA√á√ÉO DOS DADOS
 diretorio.padrao <- "D:/Pessoais/DesafioSENAC/"
 sArqAvaliacoesTrain <- paste0(diretorio.padrao,"avaliacoes_train.csv")
 df.AvaliacoesTrain <- as.data.frame(read.csv(header = TRUE, sArqAvaliacoesTrain, stringsAsFactors = FALSE))
@@ -44,22 +44,22 @@ df.AvaliacoesTest <- as.data.frame(read.csv(header = TRUE, sArqAvaliacoesTest, s
 ```{r}
 ## TRATAMENTO DOS DADOS
 df.AvaliacoesTrain$Texto <- tolower(df.AvaliacoesTrain$Texto) #transformar todas as letras em caixa baixa
-df.AvaliacoesTrain$Texto <- gsub("[^a-zA-Z0-9·ÈÌÛ˙¡…Õ”⁄˝›‡ËÏÚ˘¿»Ã“Ÿ‚ÍÓÙ˚¬ Œ‘€„ı√’Ò—‰ÎÔˆ¸ƒÀœ÷‹ˇÁ«]+", " ", df.AvaliacoesTrain$Texto) #retirar os caractÈres diferentes de alfanumÈricos
-#df.AvaliacoesTrain$Texto <- gsub("[[:punct:]]+", "", formatacaoTexto) #retirar as pontuaÁıes
+df.AvaliacoesTrain$Texto <- gsub("[^a-zA-Z0-9√°√©√≠√≥√∫√Å√â√ç√ì√ö√Ω√ù√†√®√¨√≤√π√Ä√à√å√í√ô√¢√™√Æ√¥√ª√Ç√ä√é√î√õ√£√µ√É√ï√±√ë√§√´√Ø√∂√º√Ñ√ã√è√ñ√ú√ø√ß√á]+", " ", df.AvaliacoesTrain$Texto) #retirar os caract√©res diferentes de alfanum√©ricos
+#df.AvaliacoesTrain$Texto <- gsub("[[:punct:]]+", "", formatacaoTexto) #retirar as pontua√ß√µes
 df.AvaliacoesTrain$Texto <- gsub("  *", " ", df.AvaliacoesTrain$Texto)
-df.AvaliacoesTrain$Texto <- abjutils::rm_accent(df.AvaliacoesTrain$Texto) #retirar os acentos. Outro mÈtodo:abjutils::rm_accent(Texto)
+df.AvaliacoesTrain$Texto <- abjutils::rm_accent(df.AvaliacoesTrain$Texto) #retirar os acentos. Outro m√©todo:abjutils::rm_accent(Texto)
 
 
 df.AvaliacoesTest$Texto <- tolower(df.AvaliacoesTest$Texto)
-df.AvaliacoesTest$Texto <- gsub("[^a-zA-Z0-9·ÈÌÛ˙¡…Õ”⁄˝›‡ËÏÚ˘¿»Ã“Ÿ‚ÍÓÙ˚¬ Œ‘€„ı√’Ò—‰ÎÔˆ¸ƒÀœ÷‹ˇÁ«]+", " ", df.AvaliacoesTest$Texto) #retirar os caractÈres diferentes de alfanumÈricos
+df.AvaliacoesTest$Texto <- gsub("[^a-zA-Z0-9√°√©√≠√≥√∫√Å√â√ç√ì√ö√Ω√ù√†√®√¨√≤√π√Ä√à√å√í√ô√¢√™√Æ√¥√ª√Ç√ä√é√î√õ√£√µ√É√ï√±√ë√§√´√Ø√∂√º√Ñ√ã√è√ñ√ú√ø√ß√á]+", " ", df.AvaliacoesTest$Texto) #retirar os caract√©res diferentes de alfanum√©ricos
 df.AvaliacoesTest$Texto <- gsub("  *", " ", df.AvaliacoesTest$Texto)
-df.AvaliacoesTest$Texto <- abjutils::rm_accent(df.AvaliacoesTest$Texto) #retirar os acentos. Outro mÈtodo:abjutils::rm_accent(Texto)
+df.AvaliacoesTest$Texto <- abjutils::rm_accent(df.AvaliacoesTest$Texto) #retirar os acentos. Outro m√©todo:abjutils::rm_accent(Texto)
 
 
 ```
 
 ```{r}
-## TOKENIZA«√O DAS PALAVRAS E VETORIZA«√O
+## TOKENIZA√á√ÉO DAS PALAVRAS E VETORIZA√á√ÉO
 h2o.init()
 treinamento.h <- as.h2o(df.AvaliacoesTrain, destination_frame = "avaliacoes_train")
 teste.h <- as.h2o(df.AvaliacoesTest, destination_frame = "avaliacoes_test")
