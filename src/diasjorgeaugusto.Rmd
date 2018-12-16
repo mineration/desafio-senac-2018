@@ -1,0 +1,133 @@
+---
+title: "Mineration - Desafio Senac 2018"
+author: "Jorge Augusto Dias Samsonescu"
+date: "23 de novembro de 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+set.seed(2018)
+```
+#Carregar dados
+```{r}
+
+diretorio.padrao <- "/home/mourao/desafio-senac-2018-completo/data/"
+ArqTrain <- paste0(diretorio.padrao,"avaliacoes_train.csv")
+df.Train <- as.data.frame(read.csv(header = TRUE, ArqTrain, stringsAsFactors = FALSE, encoding = "UTF-8"))
+ArqTest <- paste0(diretorio.padrao,"avaliacoes_test.csv")
+df.Test <- as.data.frame(read.csv(header = TRUE, ArqTest, stringsAsFactors = FALSE, encoding = "UTF-8"))
+```
+#Criar stopwords
+```{r}
+if(any(grepl("package:tm", search()))) detach("package:tm") else message("tm not loaded")
+library(stopwords)
+stopwordpt <- stopwords(language = "pt", source = "snowball")
+stopworden <- stopwords(language = "en")
+```
+#Pré-processamento
+```{r}
+#Carregar pacotes
+library(tm)
+library(text2vec)
+
+#Criar funções para pré-processamento
+removeNumPunct <- function(x) gsub("[^[:alpha:][:space:]]*", "", x)
+
+rm_accent <- function(str,pattern="all") {
+  if(!is.character(str))
+    str <- as.character(str)
+  
+  pattern <- unique(pattern)
+  
+  if(any(pattern=="Ç"))
+    pattern[pattern=="Ç"] <- "ç"
+  
+  symbols <- c(
+    acute = "áéíóúÁÉÍÓÚýÝ",
+    grave = "àèìòùÀÈÌÒÙ",
+    circunflex = "âêîôûÂÊÎÔÛ",
+    tilde = "ãõÃÕñÑ",
+    umlaut = "äëïöüÄËÏÖÜÿ",
+    cedil = "çÇ"
+  )
+  
+  nudeSymbols <- c(
+    acute = "aeiouAEIOUyY",
+    grave = "aeiouAEIOU",
+    circunflex = "aeiouAEIOU",
+    tilde = "aoAOnN",
+    umlaut = "aeiouAEIOUy",
+    cedil = "cC"
+  )
+  
+  accentTypes <- c("´","`","^","~","¨","ç")
+  
+  if(any(c("all","al","a","todos","t","to","tod","todo")%in%pattern))
+    return(chartr(paste(symbols, collapse=""), paste(nudeSymbols, collapse=""), str))
+  
+  for(i in which(accentTypes%in%pattern))
+    str <- chartr(symbols[i],nudeSymbols[i], str)
+  
+  return(str)
+}
+
+#Pré-processamento
+df.Train$Texto <- removeNumPunct(df.Train$Texto)
+df.Train$Texto <- rm_accent(df.Train$Texto)
+df.Train$Texto <- tolower(df.Train$Texto)
+df.Train$Texto <- removeWords(df.Train$Texto, c(stopwordpt, stopworden))
+
+df.Test$Texto <- removeNumPunct(df.Test$Texto)
+df.Test$Texto <- rm_accent(df.Test$Texto)
+df.Test$Texto <- tolower(df.Test$Texto)
+df.Test$Texto <- removeWords(df.Test$Texto, c(stopwordpt, stopworden))
+```
+#Document Term Matrix (DTM)
+```{r}
+#Tokenização
+token = word_tokenizer
+
+#Criar iterador
+it_train = itoken(df.Train$Texto, tokenizer = token, ids = df.Train$ID)
+
+#Criar vocabulario com bigramas
+vocab = create_vocabulary(it_train, ngram = c(1, 3))
+
+#Vetorizar
+vectorizer = vocab_vectorizer(vocab)
+
+library(glmnet)
+library(stringr)
+
+NFOLDS = 50
+vocab = vocab %>% prune_vocabulary(term_count_min = 10, doc_proportion_max = 0.5)
+
+#DTM
+trigram_vectorizer = vocab_vectorizer(vocab)
+dtm_train = create_dtm(it_train, trigram_vectorizer)
+#Cross-validation GLM
+res = cv.glmnet(x = dtm_train, y = df.Train[['Avaliacao']], 
+                family = 'binomial', alpha = 1,
+                type.measure = "auc", nfolds = NFOLDS,
+                thresh = 1e-3, maxit = 1e3)
+print(max(res$cvm))
+
+```
+#Predição
+```{r}
+it_test = df.Test$Texto %>% 
+  token %>% 
+  itoken(ids = df.Test$ID)
+
+dtm_test = create_dtm(it_test, trigram_vectorizer)
+preds = predict(res, dtm_test, type = 'response')
+resultado <- as.data.frame(preds)
+
+df.submissao <- cbind(df.Test$ID, resultado)
+df.submissao <- as.data.frame(df.submissao)
+arquivo_submissao <- paste0(diretorio.padrao,"submissao_gutodias.csv")
+write.csv(x = df.submissao, file = arquivo_submissao, row.names = FALSE)
+```
+
+

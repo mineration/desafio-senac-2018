@@ -1,0 +1,125 @@
+---
+title: "An?lise de Sentimentos"
+author: "Rogerio Lopes"
+date: "08/11/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+#source("https://bioconductor.org/biocLite.R")
+#biocLite("Biobase")
+
+#install.packages("abjutils")
+#install.packages("stringi")
+#install.packages("tm")
+#install.packages("stringr")
+#install.packages("caret")
+#install.packages("abjutils")
+#install.packages("stringi")
+
+```
+
+
+
+```{r }
+library("readr")
+library("tm")
+library("stringr")
+library("caret")
+library("h2o")
+library("abjutils")
+library("stringi")
+```
+
+```{r}
+##IMPORTA??O DOS DADOS
+diretorio.padrao <- "/home/ubuntu/DesafioSenac/"
+sArqAvaliacoesTrain <- paste0(diretorio.padrao,"avaliacoes_train.csv")
+df.AvaliacoesTrain <- as.data.frame(read.csv(header = TRUE, sArqAvaliacoesTrain, stringsAsFactors = FALSE))
+sArqAvaliacoesTest <- paste0(diretorio.padrao,"avaliacoes_test.csv")
+df.AvaliacoesTest <- as.data.frame(read.csv(header = TRUE, sArqAvaliacoesTest, stringsAsFactors = FALSE))
+```
+
+```{r}
+## TRATAMENTO DOS DADOS
+df.AvaliacoesTrain$Texto <- tolower(df.AvaliacoesTrain$Texto) #transformar todas as letras em caixa baixa
+df.AvaliacoesTrain$Texto <- gsub("[^a-zA-Z0-9???????????????????????????????????????????????????]+", " ", df.AvaliacoesTrain$Texto) #retirar os caract?res diferentes de alfanum?ricos
+#df.AvaliacoesTrain$Texto <- gsub("[[:punct:]]+", "", formatacaoTexto) #retirar as pontua??es
+df.AvaliacoesTrain$Texto <- gsub("  *", " ", df.AvaliacoesTrain$Texto)
+df.AvaliacoesTrain$Texto <- abjutils::rm_accent(df.AvaliacoesTrain$Texto) #retirar os acentos. Outro m?todo:abjutils::rm_accent(Texto)
+
+
+df.AvaliacoesTest$Texto <- tolower(df.AvaliacoesTest$Texto)
+df.AvaliacoesTest$Texto <- gsub("[^a-zA-Z0-9???????????????????????????????????????????????????]+", " ", df.AvaliacoesTest$Texto) #retirar os caract?res diferentes de alfanum?ricos
+df.AvaliacoesTest$Texto <- gsub("  *", " ", df.AvaliacoesTest$Texto)
+df.AvaliacoesTest$Texto <- abjutils::rm_accent(df.AvaliacoesTest$Texto) #retirar os acentos. Outro m?todo:abjutils::rm_accent(Texto)
+
+
+```
+
+```{r}
+## TOKENIZA??O DAS PALAVRAS E VETORIZA??O
+h2o.init()
+treinamento.h <- as.h2o(df.AvaliacoesTrain, destination_frame = "avaliacoes_train")
+teste.h <- as.h2o(df.AvaliacoesTest, destination_frame = "avaliacoes_test")
+summary(treinamento.h)
+treinamento.h[1,"Texto"]
+words.train <- h2o.tokenize(treinamento.h$Texto, split = " ")
+words.test <- h2o.tokenize(teste.h$Texto, split = " ")
+words.full <- h2o.rbind(words.train, words.test)
+w2v.model <- h2o.word2vec(training_frame = words.full , model_id = "word2vec_trpadvisor",
+                           sent_sample_rate = 0, epochs = 8, vec_size = 150, window_size = 7, max_runtime_secs = 1800)
+```
+
+```{r}
+classe.vecs <- h2o.transform(w2v.model, words.train, aggregate_method = "AVERAGE")
+valid.classes <- ! is.na(classe.vecs$C1)
+data.train <- h2o.cbind(treinamento.h[valid.classes,c("Avaliacao")], classe.vecs[valid.classes,])
+data.train$Avaliacao <- as.factor(data.train$Avaliacao)
+classe.vecs.test <- h2o.transform(w2v.model, words.test, aggregate_method = "AVERAGE")
+valid.classes.test <- ! is.na(classe.vecs.test$C1)
+data.test <- classe.vecs.test[valid.classes.test,]
+```
+
+```{r}
+myX <- names(classe.vecs)
+myY <- "Avaliacao"
+
+mdlSentimento.automl <- h2o.automl(myX ,myY,  
+                         training_frame = data.train,
+                         #balance_classes = TRUE,
+                         #ntrees = 90,
+                         max_runtime_secs = 1800,
+                         stopping_metric = 'AUC',
+                         stopping_rounds =  4,
+                         stopping_tolerance =  0.96,
+                         nfolds = 5)
+
+```
+
+```{r}
+mdlSentimento.automl@leader@model$cross_validation_metrics@metrics$logloss
+```
+
+```{r}
+predict.test <- h2o.predict(mdlSentimento.automl, data.test)
+```
+
+```{r}
+df.submissao.h <- h2o.cbind(teste.h$ID, predict.test$p1)
+#names(df.submissao.h) <- c("ID", "Avaliacao")
+#df.submissao.h$Avaliacao <- as.factor(df.submissao.h$Avaliacao)
+#summary(df.submissao.h)
+```
+
+```{r}
+df.submissao <- as.data.frame(df.submissao.h)
+arquivo_submissao <- paste0(diretorio.padrao,"submissao_00.csv")
+h2o.exportFile(df.submissao.h, path = '~/resultado17.csv' , force = TRUE)
+write.csv(x = df.submissao, file = '/home/ubuntu/DesafioSenac/Competidores/Ellaynne/resultado17.csv', row.names = FALSE, col.names = FALSE)
+```
+```{r}
+LogLoss()
+```
+
