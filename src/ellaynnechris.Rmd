@@ -1,5 +1,5 @@
 ---
-title: "An?lise de Sentimentos"
+title: "Análise de Sentimentos"
 author: "Rogerio Lopes"
 date: "08/11/2018"
 output: html_document
@@ -33,8 +33,8 @@ library("stringi")
 ```
 
 ```{r}
-##IMPORTA??O DOS DADOS
-diretorio.padrao <- "/home/ubuntu/DesafioSenac/"
+##IMPORTAÇÃO DOS DADOS
+diretorio.padrao <- "D:/Pessoais/DesafioSENAC/"
 sArqAvaliacoesTrain <- paste0(diretorio.padrao,"avaliacoes_train.csv")
 df.AvaliacoesTrain <- as.data.frame(read.csv(header = TRUE, sArqAvaliacoesTrain, stringsAsFactors = FALSE))
 sArqAvaliacoesTest <- paste0(diretorio.padrao,"avaliacoes_test.csv")
@@ -44,22 +44,22 @@ df.AvaliacoesTest <- as.data.frame(read.csv(header = TRUE, sArqAvaliacoesTest, s
 ```{r}
 ## TRATAMENTO DOS DADOS
 df.AvaliacoesTrain$Texto <- tolower(df.AvaliacoesTrain$Texto) #transformar todas as letras em caixa baixa
-df.AvaliacoesTrain$Texto <- gsub("[^a-zA-Z0-9???????????????????????????????????????????????????]+", " ", df.AvaliacoesTrain$Texto) #retirar os caract?res diferentes de alfanum?ricos
-#df.AvaliacoesTrain$Texto <- gsub("[[:punct:]]+", "", formatacaoTexto) #retirar as pontua??es
+df.AvaliacoesTrain$Texto <- gsub("[^a-zA-Z0-9áéíóúÁÉÍÓÚýÝàèìòùÀÈÌÒÙâêîôûÂÊÎÔÛãõÃÕñÑäëïöüÄËÏÖÜÿçÇ]+", " ", df.AvaliacoesTrain$Texto) #retirar os caractéres diferentes de alfanuméricos
+#df.AvaliacoesTrain$Texto <- gsub("[[:punct:]]+", "", formatacaoTexto) #retirar as pontuações
 df.AvaliacoesTrain$Texto <- gsub("  *", " ", df.AvaliacoesTrain$Texto)
-df.AvaliacoesTrain$Texto <- abjutils::rm_accent(df.AvaliacoesTrain$Texto) #retirar os acentos. Outro m?todo:abjutils::rm_accent(Texto)
+df.AvaliacoesTrain$Texto <- abjutils::rm_accent(df.AvaliacoesTrain$Texto) #retirar os acentos. Outro método:abjutils::rm_accent(Texto)
 
 
 df.AvaliacoesTest$Texto <- tolower(df.AvaliacoesTest$Texto)
-df.AvaliacoesTest$Texto <- gsub("[^a-zA-Z0-9???????????????????????????????????????????????????]+", " ", df.AvaliacoesTest$Texto) #retirar os caract?res diferentes de alfanum?ricos
+df.AvaliacoesTest$Texto <- gsub("[^a-zA-Z0-9áéíóúÁÉÍÓÚýÝàèìòùÀÈÌÒÙâêîôûÂÊÎÔÛãõÃÕñÑäëïöüÄËÏÖÜÿçÇ]+", " ", df.AvaliacoesTest$Texto) #retirar os caractéres diferentes de alfanuméricos
 df.AvaliacoesTest$Texto <- gsub("  *", " ", df.AvaliacoesTest$Texto)
-df.AvaliacoesTest$Texto <- abjutils::rm_accent(df.AvaliacoesTest$Texto) #retirar os acentos. Outro m?todo:abjutils::rm_accent(Texto)
+df.AvaliacoesTest$Texto <- abjutils::rm_accent(df.AvaliacoesTest$Texto) #retirar os acentos. Outro método:abjutils::rm_accent(Texto)
 
 
 ```
 
 ```{r}
-## TOKENIZA??O DAS PALAVRAS E VETORIZA??O
+## TOKENIZAÇÃO DAS PALAVRAS E VETORIZAÇÃO
 h2o.init()
 treinamento.h <- as.h2o(df.AvaliacoesTrain, destination_frame = "avaliacoes_train")
 teste.h <- as.h2o(df.AvaliacoesTest, destination_frame = "avaliacoes_test")
@@ -114,12 +114,8 @@ df.submissao.h <- h2o.cbind(teste.h$ID, predict.test$p1)
 ```
 
 ```{r}
-df.submissao <- as.data.frame(df.submissao.h)
-arquivo_submissao <- paste0(diretorio.padrao,"submissao_00.csv")
-h2o.exportFile(df.submissao.h, path = '~/resultado17.csv' , force = TRUE)
-write.csv(x = df.submissao, file = '/home/ubuntu/DesafioSenac/Competidores/Ellaynne/resultado17.csv', row.names = FALSE, col.names = FALSE)
+#df.submissao <- as.data.frame(df.submissao.h)
+#arquivo_submissao <- paste0(diretorio.padrao,"submissao_00.csv")
+h2o.exportFile(df.submissao.h, path = 'D:/Pessoais/DesafioSENAC/resultado17.csv' , force = TRUE)
+#write.csv(x = df.submissao.h, file = arquivo_submissao, row.names = FALSE)
 ```
-```{r}
-LogLoss()
-```
-
