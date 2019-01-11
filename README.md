@@ -1,9 +1,10 @@
 # Últimas notícias:
 
 - ## Resultado da Competição:
-    - 1º Lugar: Lucas Cusinato 
-    - 2º Lugar: Jorge Augusto Dias Samsonescu
-    - 3º Lugar: Ellaynne Christine Ribeiro de Moraes Sousa 
+    - 1º Lugar: Lucas Cusinato (Abdicou da premiação)
+    - 2º Lugar: Jorge Augusto Dias Samsonescu (40% de desconto)
+    - 3º Lugar: Ellaynne Christine Ribeiro de Moraes Sousa (30% de desconto)
+    - 4º Lugar: Marcos Brito (20% de desconto)
 
 # Desafio Senac 2018
 
